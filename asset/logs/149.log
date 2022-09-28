@@ -1,6 +1,0 @@
-[1586] {INFO} Logger started
-[1645] {INFO} link:link
-[1666] {INFO} text:./other-file.jt
-[1697] {ERROR} ./asset/file.jt(1;22): string literal ending not found
-               link "./other-file.jt"
-[1720] {INFO} Completion of program execution
