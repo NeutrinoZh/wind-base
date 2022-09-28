@@ -1,0 +1,30 @@
+[1901] {INFO} Logger started
+[2013] {INFO} link:link
+[2030] {INFO} text:./other-file.jt
+[2042] {INFO} const:const
+[2052] {INFO} word:ab
+[2064] {INFO} operator:=
+[2074] {INFO} word:4
+[2084] {INFO} word:Object
+[2094] {INFO} operator:{
+[2103] {INFO} word:array
+[2111] {INFO} operator:=
+[2120] {INFO} operator:[
+[2129] {INFO} word:1
+[2138] {INFO} operator:,
+[2147] {INFO} word:2
+[2155] {INFO} operator:,
+[2163] {INFO} word:3
+[2173] {INFO} operator:,
+[2181] {INFO} word:4
+[2190] {INFO} operator:,
+[2199] {INFO} word:5
+[2208] {INFO} operator:]
+[2217] {INFO} word:x
+[2229] {INFO} operator:=
+[2238] {INFO} word:5
+[2247] {INFO} word:y
+[2256] {INFO} operator:=
+[2265] {INFO} word:3
+[2275] {INFO} operator:}
+[2290] {INFO} Completion of program execution
