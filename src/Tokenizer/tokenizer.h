@@ -15,6 +15,10 @@ namespace WindEngine {
         std::string m_fullText = "";
 
         unsigned int m_line = 0, m_row = 0;
+
+        Tokenizer(const std::string path) {
+            open(path);
+        }
     public:
         struct Token {
             std::string m_value;
@@ -40,18 +44,16 @@ namespace WindEngine {
 
         const static Token NIL;
 
-        Tokenizer() = default;
-        Tokenizer(const std::string path) {
-            open(path);
-        }
-
         bool is_open();
         bool open(const std::string path);
         
-        Token get();
+        Token getAbsolute(unsigned int position);
+        Token getRelative(int relative_position = 0);
 
         typedef std::function<Token(ITokenizer*)> Middleware;
     protected:    
+        std::vector<Token> m_tokens;
+
         const static Token REQUEST_NEWLINE;
 
         std::vector<Middleware> m_middleware;

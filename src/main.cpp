@@ -1,4 +1,6 @@
-#include "./JText/jtext_tokenizer.h"
+#define WIND_TEST
+
+#include "./Test/test.h"
 
 namespace wd = WindEngine;
 
@@ -11,17 +13,22 @@ int main() {
         self.numSpace = 2;
     });
 
+
+#ifndef WIND_TEST
     JTextTokenizer tokenizer("./asset/file.jt");
     if (!tokenizer.is_open()) {
         Log::error() << "Could open file for tokenization";
         return EXIT_SUCCESS;
     }
 
-    auto token = tokenizer.get();
+    auto token = tokenizer.getRelative();
     while (token != Tokenizer::NIL) {
         Log::info() << token.m_type << ": \"" << token.m_value << "\"";
-        token = tokenizer.get();
+        token = tokenizer.getRelative();
     } 
 
     return EXIT_SUCCESS;
+#else
+    return wd::test_main();
+#endif
 }

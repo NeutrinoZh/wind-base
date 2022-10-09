@@ -1,0 +1,5 @@
+[1813] {INFO} Logger started
+[1869] {SECTION} test_main called
+  [2049] {ERROR} ./src/./Test/test.h(180): get token (word;'NeutrinoZhs') but should be (word;'NeutrinoZh')
+[2188] {SECTION} testing ended
+[2212] {INFO} Completion of program execution

@@ -1,5 +1,5 @@
-#ifndef JTEXT_H
-#define JTEXT_H
+#ifndef JTEXT_TOKENIZER_H
+#define JTEXT_TOKENIZER_H
 
 #include "../Tokenizer/tokenizer.h"
 

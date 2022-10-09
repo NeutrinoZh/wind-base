@@ -1,0 +1,5 @@
+[1172] {INFO} Logger started
+[1303] {SECTION} test_main called
+  [1408] {ERROR} ./src/./Test/test.h(177): index out of range
+[1487] {SECTION} testing ended
+[1502] {INFO} Completion of program execution

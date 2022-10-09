@@ -1,5 +1,5 @@
-#ifndef WIND_UTILS_H_INCLUDED
-#define WIND_UTILS_H_INCLUDED
+#ifndef WIND_UTILS_H
+#define WIND_UTILS_H
 
 #include <iostream>
 #include <string>
@@ -13,4 +13,8 @@
 #include <map>
 #include <time.h>
 
-#endif // WIND_UTILS_H_INCLUDED
+namespace WindEngine {
+    namespace fs = std::filesystem;
+}
+
+#endif // WIND_UTILS_H

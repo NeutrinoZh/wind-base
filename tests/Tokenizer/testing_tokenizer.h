@@ -1,21 +1,43 @@
-#include "jtext_tokenizer.h"
+#include "../../src/Test/test.h"
 
-namespace WindEngine {
-    const Tokenizer::Middleware JTextTokenizer::ignore = 
-        [](ITokenizer* self) {
-            while (self->indexOf(" \t", self->get()) != -1)
-                self->next();
+namespace WindEngineTesting {
+    using namespace WindEngine;
 
-            if (self->isEndedLine())
-                return Tokenizer::REQUEST_NEWLINE;
+    class TestingTokenizer : public Tokenizer {
+    public:
+        TestingTokenizer(const std::string path):
+                Tokenizer(path) {
+            addMiddleware(ignore);
+            addMiddleware(word);
+            addMiddleware(number);
+            addMiddleware(operators);
+            addMiddleware(text);
+            addMiddleware(error);
+        }
+    private:
+        const static Middleware ignore;
+        const static Middleware word;
+        const static Middleware number;
+        const static Middleware operators;
+        const static Middleware text;
+        const static Middleware error;
+    };
 
-            return self->nextMiddleware();
-        };
+    const Tokenizer::Middleware TestingTokenizer::ignore = 
+            [](ITokenizer* self) {
+                while (self->indexOf(" \t", self->get()) != -1)
+                    self->next();
 
-    const Tokenizer::Middleware JTextTokenizer::word =
+                if (self->isEndedLine())
+                    return Tokenizer::REQUEST_NEWLINE;
+
+                return self->nextMiddleware();
+            };
+
+    const Tokenizer::Middleware TestingTokenizer::word =
         [](ITokenizer* self) {
             std::string value = "";
-            while (isalnum(self->get()))
+            while (isalpha(self->get()))
                 value += self->consume();
             
             if (!value.empty()) {
@@ -30,7 +52,7 @@ namespace WindEngine {
             return self->nextMiddleware();
         };
 
-    const Tokenizer::Middleware JTextTokenizer::number =
+    const Tokenizer::Middleware TestingTokenizer::number =
         [](ITokenizer* self) {
             std::string value = "";
             while (isdigit(self->get())) 
@@ -41,14 +63,14 @@ namespace WindEngine {
             return self->nextMiddleware();
         };
 
-    const Tokenizer::Middleware JTextTokenizer::operators =
+    const Tokenizer::Middleware TestingTokenizer::operators =
         [](ITokenizer* self) {
-            if (self->indexOf("{}()[]=,%", self->get()) != -1)
+            if (self->indexOf("+-*/.=%$", self->get()) != -1)
                 return Token("operator", std::string(1, self->consume()));
             return self->nextMiddleware();
         };
 
-    const Tokenizer::Middleware JTextTokenizer::text = 
+    const Tokenizer::Middleware TestingTokenizer::text = 
         [](ITokenizer* self) {
             if (self->skipIf('"')) {
                 std::string value = "";
@@ -65,8 +87,8 @@ namespace WindEngine {
 
             return self->nextMiddleware();
         };
-
-    const Tokenizer::Middleware JTextTokenizer::error = 
+        
+    const Tokenizer::Middleware TestingTokenizer::error = 
         [](ITokenizer* self) {
             return self->error("unknown char");
         };

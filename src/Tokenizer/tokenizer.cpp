@@ -4,9 +4,13 @@ namespace WindEngine {
     const Tokenizer::Token Tokenizer::NIL = Tokenizer::Token("NIL", "NIL");
     const Tokenizer::Token Tokenizer::REQUEST_NEWLINE = Tokenizer::Token("\n", "\n");
 
-    Tokenizer::Token Tokenizer::get() {
+    Tokenizer::Token Tokenizer::getAbsolute(unsigned int position) {
         if (!is_open())
             return Tokenizer::NIL;
+
+        if (position < m_row) {
+            return m_tokens[position];
+        }
 
         if (m_row == m_curr_line.size()) {
             if (!getline(m_file, m_curr_line))
@@ -20,8 +24,21 @@ namespace WindEngine {
 
         Token result = m_interface->nextMiddleware();
         if (result.m_type == "\n" || m_curr_line.empty())
-            return get();
+            return getAbsolute(position + 1);
+
+        m_tokens.push_back(result);
+
         return result;
+    }
+
+    Tokenizer::Token Tokenizer::getRelative(int relative_position) {
+        unsigned int position = m_row + relative_position;
+        if (position < 0 || position > m_curr_line.size()) {
+            m_interface->error("when getting a token by a relative position, the position index is out of range");
+            return Tokenizer::NIL;
+        }
+
+        return getAbsolute(position);
     }
 
     void Tokenizer::addMiddleware(Middleware software) {
@@ -41,7 +58,7 @@ namespace WindEngine {
         return m_file.is_open();
     }
 
-    // =================== ControlTokenizer ========================
+    // =================== ITokenizer ========================
 
     Tokenizer::Token ITokenizer::nextMiddleware() {
         if (
@@ -52,7 +69,7 @@ namespace WindEngine {
         return self.m_middleware[self.m_curr_middleware++](this);
     }
 
-    int ITokenizer::indexOf(std::string str, char ch) {
+    int ITokenizer::indexOf(std::string str, char ch) { // std::find??
         unsigned int i;
         for (i = 0; i < str.size(); ++i)
             if (str[i] == ch) return i;
