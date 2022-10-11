@@ -1,6 +1,7 @@
 #define WIND_TEST
 
-#include "./Test/test.h"
+//#include "./Test/test.h"
+#include "../tests/test_main.h"
 
 namespace wd = WindEngine;
 
@@ -29,6 +30,6 @@ int main() {
 
     return EXIT_SUCCESS;
 #else
-    return wd::test_main();
+    WindEngineTesting::test_main();
 #endif
 }

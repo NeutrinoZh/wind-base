@@ -1,5 +1,0 @@
-[1101] {INFO} Logger started
-[1140] {SECTION} test_main called
-  [1257] {ERROR} ./src/./Test/test.h(179): get token (word;'haha') but should be (NIL;'NIL')
-[1342] {SECTION} testing ended
-[1356] {INFO} Completion of program execution

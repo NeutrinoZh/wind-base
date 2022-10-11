@@ -1,5 +1,0 @@
-[2158] {INFO} Logger started
-[2219] {SECTION} test_main called
-  [2438] {ERROR} ./src/./Test/test.h(178): get token (NIL;'NIL') but should be (NIL;'NIL')
-[2559] {SECTION} testing ended
-[2579] {INFO} Completion of program execution

@@ -1,5 +1,0 @@
-[3820] {INFO} Logger started
-[3923] {SECTION} test_main called
-  [4237] {ERROR} ./src/./Test/test.h(178): get token (number;'5') but should be (text;'--------------------')
-[4564] {SECTION} testing ended
-[4622] {INFO} Completion of program execution

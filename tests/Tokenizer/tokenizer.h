@@ -1,85 +1,99 @@
 #include "./testing_tokenizer.h"
 
 namespace WindEngineTesting {
-    bool TESTING_TOKENIZER_TEST_INIT() {
-        try {
-            fs::create_directory("./tmp/");
-        } catch (fs::filesystem_error& ex) {
-            Log::error() << "Couldn't create tmp directory for testing tokenizer";
-            return false;
-        }
+    class UNIT_TEST(TestingTokenizerTest)
+        using Token = Tokenizer::Token;
+    private:
+        std::string m_dir;
+        std::string m_path;
 
-        std::ofstream file;
+        std::vector<std::string> m_input;
+        std::vector<Token> m_output;
+    protected:
+        bool onCreate() override {
+            m_dir = "./tmp/";
+            m_path = m_dir + "test";
+            
+            m_input = std::vector<std::string> {
+                "\"--------------------\"",
+                "This is ",
+                "test.",
+                "\"(-_-) + (+_+)\" = love",
+                "09.10.2022",
+                "By NeutrinoZh",
+                "\"--------------------\"",
+                ""
+            };
 
-        file.open("./tmp/test_0");
-        if (!file.is_open()) {
-            Log::error() << "Couldn't create file for testing tokenizer";
-            return false;
+            m_output = std::vector<Token> {
+                Token("text", "--------------------"),
+                Token("word", "This"),
+                Token("word", "is"),
+                Token("word", "test"),
+                Token("operator", "."),
+                Token("text", "(-_-) + (+_+)"),
+                Token("operator", "="),
+                Token("word", "love"),
+                Token("number", "09"),
+                Token("operator", "."),
+                Token("number", "10"),
+                Token("operator", "."),
+                Token("number", "2022"),
+                Token("word", "By"),
+                Token("word", "NeutrinoZh"),
+                Token("text", "--------------------"),
+                Tokenizer::NIL
+            };
+            
+            return true;
         }
         
-        const char* test_0[] {
-            "\"--------------------\"",
-            "This is ",
-            "test.",
-            "\"(-_-) + (+_+)\" = love",
-            "09.10.2022",
-            "By NeutrinoZh",
-            "\"--------------------\"",
-            ""
-        };
+        bool onInit() override {
+            try {
+                fs::create_directory(m_dir);
+            } catch (fs::filesystem_error& ex) {
+                Log::error() << "Couldn't create tmp directory for testing tokenizer";
+                return false;
+            }
 
-        for (unsigned int i = 0; test_0[i][0] != '\0'; ++i)
-            file << test_0[i] << "\n";
+            std::ofstream file;
 
-        file.close();
-        return true;
-    }
+            file.open(m_path);
+            if (!file.is_open()) {
+                Log::error() << "Couldn't create file for testing tokenizer";
+                return false;
+            }
+            
+            for (std::string& line : m_input)
+                file << line << "\n";
 
-    bool TESTING_TOKENIZER_TEST_DESTROY() {
-        try {
-            fs::remove_all("./tmp/");
+            file.close();
             return true;
-        } catch (fs::filesystem_error& ex) {
-            Log::error() << "Couldn't remove tmp directory for testing tokenizer";
-            return false;
         }
-    }
 
-    TEST(TESTING_TOKENIZER_TEST,
-        using Token = Tokenizer::Token;
-        TestingTokenizer tokenizer = TestingTokenizer("./tmp/test_0");
-
-        const unsigned int SIZE = 16;
-        const Token output[SIZE + 1] = {
-            Token("text", "--------------------"),
-            Token("word", "This"),
-            Token("word", "is"),
-            Token("word", "test"),
-            Token("operator", "."),
-            Token("text", "(-_-) + (+_+)"),
-            Token("operator", "="),
-            Token("word", "love"),
-            Token("number", "09"),
-            Token("operator", "."),
-            Token("number", "10"),
-            Token("operator", "."),
-            Token("number", "2022"),
-            Token("word", "By"),
-            Token("word", "NeutrinoZh"),
-            Token("text", "--------------------"),
-            Tokenizer::NIL
-        };
-
-        Token curr = tokenizer.getRelative();
-        unsigned int i = 0;
-        while (curr != Tokenizer::NIL) {
-            ASSERT(curr == output[i] && i < SIZE, (
-                "received token (" + curr.m_type + ";'" + curr.m_value + "'), " +
-                "but should have been (" + output[i].m_type + ";'" + output[i].m_value + "')"
-            ).c_str());
-
-            ++i;
-            curr = tokenizer.getRelative();
+        bool onCompleted() override {
+            try {
+                fs::remove_all(m_dir);
+                return true;
+            } catch (fs::filesystem_error& ex) {
+                Log::error() << "Couldn't remove tmp directory for testing tokenizer";
+                return false;
+            }
         }
-    )   
+
+        bool onTest() override {
+            TestingTokenizer tokenizer = TestingTokenizer(m_path);
+
+            Token i_token;
+            for (Token o_token : m_output) {
+                i_token = tokenizer.getRelative();
+                ASSERT(o_token == i_token, (
+                    "received token: (" + i_token.m_type + "; \"" + i_token.m_value + "\"), " +
+                    "but should have been: (" + o_token.m_type + "; \"" + o_token.m_value + "\")"
+                ).c_str());
+            }
+
+            return true;
+        }
+    };
 }
